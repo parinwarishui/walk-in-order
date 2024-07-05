@@ -1,8 +1,28 @@
 /*
-@title: Walk In Order
+@title: Walk-In Order
 @author: prwrit_
 @tags: []
 @addedOn: 2024-07-03
+
+HOW TO PLAY:
+"Walk-in Order" is a game where you will walk through mazes with colored blocks, 
+which you have to step in order as stated on the top of your screen. Failure to do so
+means you have to restart the level all over again at the beginning. As you advance through
+the game, more colors will be introduced and more challenging mazes will follow.
+
+Press W, A, S, D to move your character up, left, down, right, respectively.
+
+Press J if you are stuck and want to re-start the level all over again.
+
+Press K if you want to start again at Level 0,
+this is for use only if you have finished the whole game (if you actually did that).
+
+REMARKS:
+- You are allowed to step in a colored block, and get out on the same side you entered in.
+- You, however, are not allowed to step on the same color again after leaving it.
+
+PLEASE ENJOY!
+
 */
 
 const player = "p";
@@ -19,7 +39,6 @@ const checkmark = "x";
 let ordercount = 0;
 let prevX, prevY;
 let shouldpunish = 0;
-const playerevil = "f";
 
 // in-game music
 const deadmelody = tune`
@@ -174,7 +193,7 @@ setLegend(
 0HHHHHHHHHHHHHH0
 0HHHHHHHHHHHHHH0
 0000000000000000` ],
-  [ pinkblock,  bitmap`
+  [pinkblock,  bitmap`
 0000000000000000
 0888888888888880
 0888888888888880
@@ -191,7 +210,7 @@ setLegend(
 0888888888888880
 0888888888888880
 0000000000000000` ],
-  [ brownblock,  bitmap`
+  [brownblock,  bitmap`
 0000000000000000
 0CCCCCCCCCCCCCC0
 0CCCCCCCCCCCCCC0
@@ -208,7 +227,7 @@ setLegend(
 0CCCCCCCCCCCCCC0
 0CCCCCCCCCCCCCC0
 0000000000000000` ],
-  [ checkmark, bitmap`
+  [checkmark, bitmap`
 0000000000000000
 00.............0
 0.0............0
@@ -225,23 +244,6 @@ setLegend(
 0............0.0
 0.............00
 0000000000000000` ],
-  [ playerevil, bitmap`
-................
-................
-.....111111.....
-...111....111...
-...1........1...
-..11........11..
-..1..1....1..1..
-..1..1....1..1..
-..1..........1..
-..1..........1..
-..11.111111.11..
-...1........1...
-...111....111...
-.....111111.....
-................
-................` ]
 )
 
 let level = 0
@@ -309,6 +311,18 @@ wwwwwwwwwww`,
   map`
 ...roygb...
 wwwwwwwwwww
+wwwwwwwwwww
+ww.......ww
+wwproygb.ww
+ww.......ww
+ww.......ww
+ww.......ww
+ww.......ww
+wwwwwwwwwww
+wwwwwwwwwww`,//level 5 - +blue
+  map`
+...roygb...
+wwwwwwwwwww
 wwp..w....w
 ww.w.w.ww.w
 wwwwrwbww.w
@@ -317,7 +331,7 @@ ww.wwww...w
 ww...ww.w.w
 wwww....wow
 wwwwwwwwwww
-wwwwwwwwwww`, //level 5 - +blue
+wwwwwwwwwww`,
   map`
 ...roygb...
 wwwwwwwwwww
@@ -353,18 +367,6 @@ w.www.www.w
 wbw.....wrw
 w.wgw.w.w.w
 w...w.w..pw
-wwwwwwwwwww`,
-  map`
-...roygb...
-wwwwwwwwwww
-wwwwwwwwwww
-ww.......ww
-ww.w...w.ww
-ww.w...w.ww
-ww.......ww
-ww.wwwww.ww
-ww.......ww
-wwwwwwwwwww
 wwwwwwwwwww`,
   map`
 ...roygb...
@@ -582,10 +584,60 @@ w.w..w..w.w
 weww.wbww.w
 w...c.....w
 wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+wwp......ww
+wwrwwywwcww
+ww.w..w..ww
+ww.o..d..ww
+ww.w..w..ww
+ww.w..wwbww
+ww.e..g..ww
+wwwwwwwwwww
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w...c...d.w
+w.p.o...y.w
+w...e...o.w
+wdrg.bob..w
+w...b...r.w
+w...r...y.w
+w...g...c.w
+w...o...b.w
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+we........w
+wro.......w
+w.gy...p..w
+w..dc.....w
+w...br....w
+w....cd...w
+w.....db..w
+w......gr.w
+wwwwwwwwwww`,
 ]
+
+const finishingscene = [map`
+...........
+...........
+...........
+...........
+...........
+...........
+...roygbcde
+wwwwwwwwwww
+w.........w
+w....p....w
+wwwwwwwwwww`]
 
 setMap(levels[level]);
 setSolids([player, wall]);
+addText(`Level: 0`, { x: 2, y: 2, color: color`2` });
 
 // player movement controls WASD
 onInput("w", () => {
@@ -679,10 +731,23 @@ onInput("d", () => {
 // reset level if stuck
 onInput("j", () => {
   const currentLevel = levels[level];
-
   if (currentLevel !== undefined) {
     clearText("");
     setMap(currentLevel);
+    ordercount = 0;
+    addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
+  }
+});
+
+// in case you want to start all over again, or you have finished the game
+onInput("k", () => {
+  const currentLevel = levels[level];
+  if (currentLevel !== undefined) {
+    clearText("");
+    ordercount = 0;
+    setMap(levels[0]);
+    level = 0;
+    addText(`Level: 0`, { x: 2, y: 2, color: color`2` });
   }
 });
 
@@ -710,6 +775,7 @@ afterInput(() => {
   const pinkBlockTiles = tilesWith(pinkblock);
   const brownBlockTiles = tilesWith(brownblock);
   const currentLevel = levels[level];
+  const checkmarkblock = checkmark;
   let advancedness = 3;
 
   // 1 tile = 32 pixels(?) for memo
@@ -727,7 +793,8 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
-          addText("/", { x: 7, y: 0, color: color`0` });
+          clearTile(3, 0);
+          addSprite(3, 0, checkmark);
           ordercount++;
         }
       }
@@ -747,7 +814,8 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
-          addText("/", { x: 8, y: 0, color: color`0` });
+          clearTile(4, 0);
+          addSprite(4, 0, checkmark);
           ordercount++;
         }
       }
@@ -766,7 +834,8 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
-          addText("/", { x: 10, y: 0, color: color`0` });
+          clearTile(5, 0);
+          addSprite(5, 0, checkmark);
           ordercount++;
         }
       }
@@ -785,7 +854,8 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
-          addText("/", { x: 11, y: 0, color: color`0` });
+          clearTile(6, 0);
+          addSprite(6, 0, checkmark);
           ordercount++;
           
           // check if this level introduces blue blocks yet?
@@ -795,6 +865,7 @@ afterInput(() => {
               level++;
               setMap(levels[level]); // Set the map to the next level if no blue blocks
               clearText(); 
+              addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
             }
           }
@@ -816,7 +887,8 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          addText("/", { x: 13, y: 0, color: color`0` });
+          clearTile(7, 0);
+          addSprite(7, 0, checkmark);
           // check if this level introduces purple blocks yet?
           if (tilesWith(purpleblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -824,6 +896,7 @@ afterInput(() => {
               level++;
               setMap(levels[level]); // Set the map to the next level if no purple blocks
               clearText(); 
+              addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
             }
           }
@@ -845,7 +918,8 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          addText("/", { x: 14, y: 0, color: color`0` });
+          clearTile(8, 0);
+          addSprite(8, 0, checkmark);
           // check if this level introduces pink blocks yet?
           if (tilesWith(pinkblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -853,6 +927,7 @@ afterInput(() => {
               level++;
               setMap(levels[level]); // Set the map to the next level if no pink blocks
               clearText(); 
+              addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
             }
           }
@@ -873,7 +948,8 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          addText("/", { x: 16, y: 0, color: color`0` });
+          clearTile(9, 0);
+          addSprite(9, 0, checkmark);
           // check if this level introduces brown blocks yet?
           if (tilesWith(brownblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -881,6 +957,7 @@ afterInput(() => {
               level++;
               setMap(levels[level]); // Set the map to the next level if no brown blocks
               clearText(); 
+              addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
             } 
           }
@@ -892,7 +969,7 @@ afterInput(() => {
   brownBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 7 && shouldpunish === 1) {
-        // Reset the player to the start position
+        // Reset the player to the start positions
         playTune(deadmelody);
         setTimeout(() => {
           setMap(currentLevel);
@@ -901,13 +978,20 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          addText("/", { x: 17, y: 0, color: color`0` });
+          clearTile(10, 0);
+          addSprite(10, 0, checkmark);
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
               setMap(levels[level]);
               clearText(); 
+              addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
+            } else {
+              clearText();
+              setMap(finishingscene[0]);
+              addText("Congratulations!", { y: 2, color: color`3` });
+              addText("You finished!", { y: 5, color: color`3` });
             }
           
         }
@@ -916,10 +1000,7 @@ afterInput(() => {
   });
 
   // display level count text on screen
-  addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
-
-  // these are mostly for debugging purposes, to see the variables.
-  // addText(`punish: ${shouldpunish} count: ${ordercount}`, { x: 2, y: 14, color: color`2` });
+  // addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
 
   // gradually add advancedness number after more colors introduced -- for future use
   if (level === 5) {
@@ -945,5 +1026,9 @@ afterInput(() => {
 
   prevX = getFirst(player).x;
   prevY = getFirst(player).y;
+  
+  // these are mostly for debugging purposes, to see the variables.
+  //addText(`punish: ${shouldpunish} count: ${ordercount}`, { x: 2, y: 14, color: color`2` });
+  //addText(`prevX: ${prevX} prevY: ${prevY}`, { x: 2, y: 15, color: color`2` });
 
 });
