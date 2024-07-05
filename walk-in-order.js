@@ -19,6 +19,23 @@ const checkmark = "x";
 let ordercount = 0;
 let prevX, prevY;
 let shouldpunish = 0;
+const playerevil = "f";
+
+// in-game music
+const deadmelody = tune`
+174.41860465116278: E5^174.41860465116278,
+174.41860465116278: D5^174.41860465116278,
+174.41860465116278: C5^174.41860465116278,
+174.41860465116278: B4^174.41860465116278,
+174.41860465116278: A4^174.41860465116278,
+4709.302325581395`;
+const winmelody = tune`
+174.41860465116278: A4^174.41860465116278,
+174.41860465116278: B4^174.41860465116278,
+174.41860465116278: C5^174.41860465116278,
+174.41860465116278: D5^174.41860465116278,
+174.41860465116278: E5^174.41860465116278,
+4709.302325581395`
 
 setLegend(
   [ player, bitmap`
@@ -208,6 +225,23 @@ setLegend(
 0............0.0
 0.............00
 0000000000000000` ],
+  [ playerevil, bitmap`
+................
+................
+.....111111.....
+...111....111...
+...1........1...
+..11........11..
+..1..1....1..1..
+..1..1....1..1..
+..1..........1..
+..1..........1..
+..11.111111.11..
+...1........1...
+...111....111...
+.....111111.....
+................
+................` ]
 )
 
 let level = 0
@@ -495,6 +529,54 @@ w.o.rb..c.w
 wb........w
 we.c.ogc.cw
 wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w....y.g..w
+w.wpwwwww.w
+w.w..c..wbw
+w.wwwww.w.w
+w..o..w...w
+w.www.w.www
+w..r..w...w
+wwwwwwwewdw
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w.........w
+wercocycgew
+w....p....w
+wdrdodydgdw
+w.........w
+wcrcocycgcw
+w.........w
+wcbcbcbcbcw
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w.r.o.r.r.w
+wpo.g.y.c.w
+w.y.o.b.o.w
+w.o.y.y.r.w
+w.r.g.r.c.w
+w.o.e.d.o.w
+w.e.o.r.c.w
+w.o.r.y.r.w
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w.pw..o...w
+w.ww.wwww.w
+w.r..wg.w.w
+wwwwwww.w.w
+w..dwww.y.w
+w.w..w..w.w
+weww.wbww.w
+w...c.....w
+wwwwwwwwwww`,
 ]
 
 setMap(levels[level]);
@@ -599,6 +681,18 @@ onInput("j", () => {
   }
 });
 
+  // function for character blinking (after dying in the game)
+function blinkCharacter(duration) {
+  let blinkCount = duration / 500;
+  let blinkInterval = setInterval(() => {
+    player.visible = playerevil.visible;
+    blinkCount--;
+    if (blinkCount <= 0) {
+      clearInterval(blinkInterval);
+    }
+  }, 500);
+}
+
 //check every after input
 afterInput(() => {
   const playerSprite = getFirst(player);
@@ -618,12 +712,15 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 0 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        blinkCharacter(2000);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
         }
       }
     }
@@ -634,12 +731,15 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 1 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        blinkCharacter(1000);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
         }
       }
     }
@@ -650,12 +750,14 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 2 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
         }
       }
     }
@@ -666,23 +768,23 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 3 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
           
           // check if this level introduces blue blocks yet?
           if (tilesWith(blueblock).length == 0) {
             if ((level+1) < levels.length) {
+              playTune(winmelody);
               level++;
               setMap(levels[level]); // Set the map to the next level if no blue blocks
               clearText(); 
               ordercount = 0;
-              console.log("Moved to the next level.");
-            } else {
-              console.log("No more levels available."); //if no more levels left
             }
           }
         }
@@ -695,23 +797,23 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 4 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
           
           // check if this level introduces purple blocks yet?
           if (tilesWith(purpleblock).length == 0) {
             if ((level+1) < levels.length) {
+              playTune(winmelody);
               level++;
               setMap(levels[level]); // Set the map to the next level if no purple blocks
               clearText(); 
               ordercount = 0;
-              console.log("Moved to the next level.");
-            } else {
-              console.log("No more levels available."); //if no more levels left
             }
           }
         }
@@ -724,23 +826,23 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 5 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
           
           // check if this level introduces pink blocks yet?
           if (tilesWith(pinkblock).length == 0) {
             if ((level+1) < levels.length) {
+              playTune(winmelody);
               level++;
               setMap(levels[level]); // Set the map to the next level if no pink blocks
               clearText(); 
               ordercount = 0;
-              console.log("Moved to the next level.");
-            } else {
-              console.log("No more levels available."); //if no more levels left
             }
           }
         }
@@ -752,24 +854,24 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 6 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
           
           // check if this level introduces brown blocks yet?
           if (tilesWith(brownblock).length == 0) {
             if ((level+1) < levels.length) {
+              playTune(winmelody);
               level++;
               setMap(levels[level]); // Set the map to the next level if no brown blocks
               clearText(); 
               ordercount = 0;
-              console.log("Moved to the next level.");
-            } else {
-              console.log("No more levels available."); //if no more levels left
-            }
+            } 
           }
         }
       }
@@ -780,21 +882,21 @@ afterInput(() => {
     if (tile.some(sprite => sprite.type === player)) {
       if (ordercount !== 7 && shouldpunish === 1) {
         // Reset the player to the start position
-        setMap(currentLevel);
-        ordercount = 0;
+        playTune(deadmelody);
+        setTimeout(() => {
+          setMap(currentLevel);
+          ordercount = 0;
+        }, 1000);
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          console.log("Order Count:", ordercount);
           
             if ((level+1) < levels.length) {
+              playTune(winmelody);
               level++;
               setMap(levels[level]);
               clearText(); 
               ordercount = 0;
-              console.log("Moved to the next level.");
-            } else {
-              console.log("No more levels available."); //if no more levels left
             }
           
         }
@@ -802,21 +904,30 @@ afterInput(() => {
     }
   });
 
-  // display order count text on screen
+  // display level count text on screen
   addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
 
   // these are mostly for debugging purposes, to see the variables.
   // addText(`punish: ${shouldpunish} count: ${ordercount}`, { x: 2, y: 14, color: color`2` });
 
-  // gradually add advancedness number after more colors introduced
+  // gradually add advancedness number after more colors introduced -- for future use
   if (level === 5) {
     if (advancedness === 3) {
       (advancedness = advancedness + 1);
     }
   }
-  
   if (level === 11) {
     if (advancedness === 4) {
+      (advancedness = advancedness + 1);
+    }
+  }
+  if (level === 16) {
+    if (advancedness === 5) {
+      (advancedness = advancedness + 1);
+    }
+  }
+  if (level === 21) {
+    if (advancedness === 6) {
       (advancedness = advancedness + 1);
     }
   }
