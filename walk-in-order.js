@@ -247,40 +247,43 @@ setLegend(
 let level = 0
 const levels = [
   map`
-......royg
-wwwwwwwwww
-wwgwwwwwww
-ww......ww
-wwwwwwwyww
-wwo.....ww
-ww.wwwwwww
-wwr....pww
-wwwwwwwwww
-wwwwwwwwww`, //level 0
+...royg....
+wwwwwwwwwww
+wwgwwwwwwww
+ww......www
+wwwwwwwywww
+wwo.....www
+ww.wwwwwwww
+wwr....pwww
+wwwwwwwwwww
+wwwwwwwwwww
+wwwwwwwwwww`, //level 0
   map`
-......royg
-wwwwwwwwww
-wwwwwwwwww
-www....o.w
-www.wwww.w
-ww..y.r..w
-ww.ww.wwww
-ww.gwpwwww
-wwwwwwwwww
-wwwwwwwwww`,
+...royg....
+wwwwwwwwwww
+wwwwwwwwwww
+wwww....o.w
+wwww.wwww.w
+www..y.r..w
+www.ww.wwww
+www.gwpwwww
+wwwwwwwwwww
+wwwwwwwwwww
+wwwwwwwwwww`,
   map`
-......royg
-wwwwwwwwww
-wwp......w
-wwwwwgww.w
-wwo......w
-wwwwwwww.w
-wwy......w
-wwwwwwwwrw
-wwwwwwwwww
-wwwwwwwwww`,
+...royg....
+wwwwwwwwwww
+wwwp......w
+wwwwwwgww.w
+wwwo......w
+wwwwwwwww.w
+wwwy......w
+wwwwwwwwwrw
+wwwwwwwwwww
+wwwwwwwwwww
+wwwwwwwwwww`,
   map`
-.......royg
+...royg....
 wwwwwwwwwww
 ww.wwpw...w
 wwowwrw.w.w
@@ -292,29 +295,31 @@ ww..w...wgw
 wwwwwwwwwww
 wwwwwwwwwww`,
   map`
-......royg
-wwwwwwwwww
-wp..w....w
-w.w.w.ww.w
-wwwrw.ww.w
-w...y..wgw
-w.wwww...w
-w...ww.w.w
-www....wow
-wwwwwwwwww`,
+...royg....
+wwwwwwwwwww
+wwp..w....w
+ww.w.w.ww.w
+wwwwrw.ww.w
+ww...y..wgw
+ww.wwww...w
+ww...ww.w.w
+wwww....wow
+wwwwwwwwwww
+wwwwwwwwwww`,
   map`
-.....roygb
-wwwwwwwwww
-wp..w....w
-w.w.w.ww.w
-wwwrwbww.w
-w...y..wgw
-w.wwww...w
-w...ww.w.w
-www....wow
-wwwwwwwwww`, //level 5 - +blue
+...roygb...
+wwwwwwwwwww
+wwp..w....w
+ww.w.w.ww.w
+wwwwrwbww.w
+ww...y..wgw
+ww.wwww...w
+ww...ww.w.w
+wwww....wow
+wwwwwwwwwww
+wwwwwwwwwww`, //level 5 - +blue
   map`
-......roygb
+...roygb...
 wwwwwwwwwww
 w.o.w...w.w
 wpw...wyw.w
@@ -326,7 +331,7 @@ w...w...w.w
 wwwwwwwwwww
 wwwwwwwwwww`,
   map`
-......roygb
+...roygb...
 wwwwwwwwwww
 wo.w..w..ww
 ww..wb.wy.w
@@ -338,7 +343,7 @@ www...www.w
 wwwww....pw
 wwwwwwwwwww`,
   map`
-......roygb
+...roygb...
 wwwwwwwwwww
 w.w.....wyw
 w.wow.w.w.w
@@ -350,7 +355,7 @@ w.wgw.w.w.w
 w...w.w..pw
 wwwwwwwwwww`,
   map`
-.p....roygb
+...roygb...
 wwwwwwwwwww
 wwwwwwwwwww
 ww.......ww
@@ -362,7 +367,7 @@ ww.......ww
 wwwwwwwwwww
 wwwwwwwwwww`,
   map`
-......roygb
+...roygb...
 wwwwwwwwwww
 wwwwwwwwwww
 ww.r.....ww
@@ -374,7 +379,7 @@ ww.......ww
 wwwwwwwwwww
 wwwwwwwwwww`,
   map`
-.....roygbc
+...roygbc..
 wwwwwwwwwww
 wwwwwwwwwww
 ww.r.c...ww
@@ -386,7 +391,7 @@ ww.......ww
 wwwwwwwwwww
 wwwwwwwwwww`, //level 11 - +purple
   map`
-.....roygbc
+...roygbc..
 wwwwwwwwwww
 w.........w
 w.w.w.w.w.w
@@ -398,7 +403,7 @@ w.w.w.w.www
 w....p....w
 wwwwwwwwwww`,
   map`
-.....roygbc
+...roygbc..
 wwwwwwwwwww
 w.........w
 w.w.w.w.w.w
@@ -410,7 +415,7 @@ w.w.w.w.www
 w....pc...w
 wwwwwwwwwww`,
   map`
-.....roygbc
+...roygbc..
 wwwwwwwwwww
 wb.......cw
 wwwwwgwwwww
@@ -422,7 +427,7 @@ wy.......ow
 wwwwwpwwwww
 wwwwwwwwwww`,
   map`
-.....roygbc
+...roygbc..
 wwwwwwwwwww
 wp.r..o...w
 w.wwwwwww.w
@@ -434,7 +439,7 @@ w.w.wwwwwcw
 w.b...b...w
 wwwwwwwwwww`,
   map`
-....roygbcd
+...roygbcd.
 wwwwwwwwwww
 w......c..w
 wpwwrw.ww.w
@@ -446,7 +451,7 @@ w.wwywwww.w
 w.....w...w
 wwwwwwwwwww`, //level 16 - +pink
   map`
-....roygbcd
+...roygbcd.
 wwwwwwwwwww
 w.b.g.o.y.w
 wbwcwywbwdw
@@ -458,7 +463,7 @@ w.c.c.o.y.w
 wdwgwcwcwdw
 wwwwwwwwwww`,
   map`
-....roygbcd
+...roygbcd.
 wwwwwwwwwww
 wwwwwwwwwww
 w..c...g..w
@@ -470,7 +475,7 @@ wowwwwwww.w
 w..y..g..bw
 wwwwwwwwwww`,
   map`
-....roygbcd
+...roygbcd.
 wwwwwwwwwww
 w.pw..y...w
 w.wwowwww.w
@@ -482,7 +487,7 @@ w.w.w...wcw
 wyw...w.b.w
 wwwwwwwwwww`,
   map`
-....roygbcd
+...roygbcd.
 wwwwwwwwwww
 wwwwwwwwwpw
 w.........w
@@ -685,7 +690,7 @@ onInput("j", () => {
 function blinkCharacter(duration) {
   let blinkCount = duration / 500;
   let blinkInterval = setInterval(() => {
-    player.visible = playerevil.visible;
+    player.visible = !player.visible;
     blinkCount--;
     if (blinkCount <= 0) {
       clearInterval(blinkInterval);
@@ -707,6 +712,8 @@ afterInput(() => {
   const currentLevel = levels[level];
   let advancedness = 3;
 
+  // 1 tile = 32 pixels(?) for memo
+
   // Check if the player is on a red block
   redBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
@@ -720,6 +727,7 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
+          addText("/", { x: 7, y: 0, color: color`0` });
           ordercount++;
         }
       }
@@ -739,6 +747,7 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
+          addText("/", { x: 8, y: 0, color: color`0` });
           ordercount++;
         }
       }
@@ -757,6 +766,7 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
+          addText("/", { x: 10, y: 0, color: color`0` });
           ordercount++;
         }
       }
@@ -775,6 +785,7 @@ afterInput(() => {
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
+          addText("/", { x: 11, y: 0, color: color`0` });
           ordercount++;
           
           // check if this level introduces blue blocks yet?
@@ -805,7 +816,7 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          
+          addText("/", { x: 13, y: 0, color: color`0` });
           // check if this level introduces purple blocks yet?
           if (tilesWith(purpleblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -834,7 +845,7 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          
+          addText("/", { x: 14, y: 0, color: color`0` });
           // check if this level introduces pink blocks yet?
           if (tilesWith(pinkblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -862,7 +873,7 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          
+          addText("/", { x: 16, y: 0, color: color`0` });
           // check if this level introduces brown blocks yet?
           if (tilesWith(brownblock).length == 0) {
             if ((level+1) < levels.length) {
@@ -890,7 +901,7 @@ afterInput(() => {
       } else {
         if (shouldpunish !== 0) {
           ordercount++;
-          
+          addText("/", { x: 17, y: 0, color: color`0` });
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
