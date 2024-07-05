@@ -4,24 +4,28 @@
 @tags: []
 @addedOn: 2024-07-03
 
+PLEASE READ HERE!
+
 HOW TO PLAY:
 "Walk-in Order" is a game where you will walk through mazes with colored blocks, 
 which you have to step in order as stated on the top of your screen. Failure to do so
 means you have to restart the level all over again at the beginning. As you advance through
 the game, more colors will be introduced and more challenging mazes will follow.
 
-Press W, A, S, D to move your character up, left, down, right, respectively.
+Press K to start the game!
 
-Press J if you are stuck and want to re-start the level all over again.
-
-Press K if you want to start again at Level 0,
-this is for use only if you have finished the whole game (if you actually did that).
+CONTROLS:
+- Press W, A, S, D to move your character up, left, down, right, respectively.
+- Press J if you are stuck and want to re-start the same level all over again.
+- From now on, ONLY press K IF you want to start again at Level 0,
+this is for use only if you for some reason want to reset, or have finished the whole game.
 
 REMARKS:
 - You are allowed to step in a colored block, and get out on the same side you entered in.
-- You, however, are not allowed to step on the same color again after leaving it.
+- You, however, are not allowed to step on the block of same color again after leaving one.
 
-PLEASE ENJOY!
+PLEASE ENJOY PLAYING!
+and do report any bugs found in the game, it would help a lot! :)
 
 */
 
@@ -39,22 +43,23 @@ const checkmark = "x";
 let ordercount = 0;
 let prevX, prevY;
 let shouldpunish = 0;
+let movablestatus = 0;
 
 // in-game music
 const deadmelody = tune`
-174.41860465116278: E5^174.41860465116278,
-174.41860465116278: D5^174.41860465116278,
-174.41860465116278: C5^174.41860465116278,
-174.41860465116278: B4^174.41860465116278,
-174.41860465116278: A4^174.41860465116278,
-4709.302325581395`;
+500: A4^500,
+15500`;
 const winmelody = tune`
-174.41860465116278: A4^174.41860465116278,
-174.41860465116278: B4^174.41860465116278,
-174.41860465116278: C5^174.41860465116278,
-174.41860465116278: D5^174.41860465116278,
-174.41860465116278: E5^174.41860465116278,
-4709.302325581395`
+500: E5^500,
+15500`;
+const congratsmelody = tune`
+184.04907975460122: C5-184.04907975460122,
+184.04907975460122: E5-184.04907975460122,
+184.04907975460122: D5-184.04907975460122,
+184.04907975460122: E5-184.04907975460122,
+184.04907975460122: G5-184.04907975460122,
+184.04907975460122: B5-184.04907975460122,
+4785.2760736196315`;
 
 setLegend(
   [ player, bitmap`
@@ -76,157 +81,157 @@ setLegend(
 ................` ],
   [ wall,  bitmap`
 0000000000000000
-0LLLL00LLLLLLL00
-0LLL0LLLLLLLL000
-0LL00LLLLLLL00L0
-000LLLLLLLL00LL0
-00LLLLLLL000LLL0
-0LLLLLLL00LLLLL0
-0LLLLLL00LLLLLL0
-0LLLLL00LLLLLLL0
+0LLLL0LLLLLLLL00
+0LLL0LLLLLLLL0L0
+0LL0LLLLLLLL0LL0
+0L0LLLLLLLL0LLL0
+00LLLLLLLL0LLLL0
+0LLLLLLLL0LLLLL0
+0LLLLLLL0LLLLLL0
+0LLLLLL0LLLLLLL0
 0LLLLL0LLLLLLLL0
-0LLLL0LLLLLLL000
-0LLL0LLLLLLL00L0
-0LL0LLLLLLL00LL0
-000LLLLLLL00LLL0
-00LLLLLLL00LLLL0
+0LLLL0LLLLLLLL00
+0LLL0LLLLLLLL0L0
+0LL0LLLLLLLL0LL0
+0L0LLLLLLLL0LLL0
+00LLLLLLLL0LLLL0
 0000000000000000` ],
   [ redblock,  bitmap`
-0000000000000000
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0333333333333330
-0000000000000000` ],
+................
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+.33333333333333.
+................` ],
   [ orangeblock,  bitmap`
-0000000000000000
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0999999999999990
-0000000000000000` ],
+................
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+.99999999999999.
+................` ],
   [ yellowblock,  bitmap`
-0000000000000000
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0666666666666660
-0000000000000000` ],
+................
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+.66666666666666.
+................` ],
   [ greenblock,  bitmap`
-0000000000000000
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0444444444444440
-0000000000000000` ],
+................
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+.44444444444444.
+................` ],
   [ blueblock,  bitmap`
-0000000000000000
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0777777777777770
-0000000000000000` ],
+................
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+.77777777777777.
+................` ],
   [ purpleblock,  bitmap`
-0000000000000000
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0HHHHHHHHHHHHHH0
-0000000000000000` ],
+................
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+.HHHHHHHHHHHHHH.
+................` ],
   [pinkblock,  bitmap`
-0000000000000000
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0888888888888880
-0000000000000000` ],
+................
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+.88888888888888.
+................` ],
   [brownblock,  bitmap`
-0000000000000000
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0CCCCCCCCCCCCCC0
-0000000000000000` ],
+................
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+.CCCCCCCCCCCCCC.
+................` ],
   [checkmark, bitmap`
 0000000000000000
 00.............0
@@ -246,7 +251,6 @@ setLegend(
 0000000000000000` ],
 )
 
-let level = 0
 const levels = [
   map`
 ...royg....
@@ -444,7 +448,7 @@ wwwwwwwwwww`,
 ...roygbcd.
 wwwwwwwwwww
 w......c..w
-wpwwrw.ww.w
+wpwwrwwww.w
 www..d..w.w
 w.w.wwwbw.w
 w.o.www...w
@@ -619,9 +623,23 @@ w...br....w
 w....cd...w
 w.....db..w
 w......gr.w
-wwwwwwwwwww`,
+wwwwwwwwwww`, //level 30 - final level
 ]
 
+let level = 0
+
+const startingscene = [map`
+...........
+...........
+...........
+...........
+...........
+...........
+...roygbcde
+wwwwwwwwwww
+w.........w
+w....p....w
+wwwwwwwwwww`]
 const finishingscene = [map`
 ...........
 ...........
@@ -635,96 +653,105 @@ w.........w
 w....p....w
 wwwwwwwwwww`]
 
-setMap(levels[level]);
+setMap(startingscene[0]);
 setSolids([player, wall]);
-addText(`Level: 0`, { x: 2, y: 2, color: color`2` });
+addText("Walk-In Order", {y: 2, color: color`3` });
+addText("Press K to start", {y: 5, color: color`0` });
 
 // player movement controls WASD
 onInput("w", () => {
+  if (movablestatus === 0) {
     // get previous position before moving
-  prevX = getFirst(player).x;
-  prevY = getFirst(player).y;
-
-  //attempt movement
-  getFirst(player).y -= 1;
-
-  // check position after movement
-  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-    // if haven't moved, reset the position
-    getFirst(player).x = prevX;
-    getFirst(player).y = prevY;
-    shouldpunish = 0;
-  } else {
-    // update previous position if player has moved
     prevX = getFirst(player).x;
     prevY = getFirst(player).y;
-    shouldpunish = 1;
+  
+    //attempt movement
+    getFirst(player).y -= 1;
+  
+    // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+      // if haven't moved, reset the position
+      getFirst(player).x = prevX;
+      getFirst(player).y = prevY;
+      shouldpunish = 0;
+    } else {
+      // update previous position if player has moved
+      prevX = getFirst(player).x;
+      prevY = getFirst(player).y;
+      shouldpunish = 1;
+    }
   }
 });
 
 onInput("a", () => {
+  if (movablestatus === 0) {
     // get previous position before moving
-  prevX = getFirst(player).x;
-  prevY = getFirst(player).y;
-
-  //attempt movement
-  getFirst(player).x -= 1;
-
-  // check position after movement
-  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-    // if haven't moved, reset the position
-    getFirst(player).x = prevX;
-    getFirst(player).y = prevY;
-    shouldpunish = 0;
-  } else {
-    // update previous position if player has moved
     prevX = getFirst(player).x;
     prevY = getFirst(player).y;
-    shouldpunish = 1;
+  
+    //attempt movement
+    getFirst(player).x -= 1;
+  
+    // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+      // if haven't moved, reset the position
+      getFirst(player).x = prevX;
+      getFirst(player).y = prevY;
+      shouldpunish = 0;
+    } else {
+      // update previous position if player has moved
+      prevX = getFirst(player).x;
+      prevY = getFirst(player).y;
+      shouldpunish = 1;
+    }
   }
 });
 
 onInput("s", () => {
-  // get previous position before moving
-  prevX = getFirst(player).x;
-  prevY = getFirst(player).y;
-
-  //attempt movement
-  getFirst(player).y += 1;
-
-  // check position after movement
-  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-    // if haven't moved, reset the position
-    getFirst(player).x = prevX;
-    getFirst(player).y = prevY;
-    shouldpunish = 0;
-  } else {
-    // update previous position if player has moved
+  if (movablestatus === 0) {
+    // get previous position before moving
     prevX = getFirst(player).x;
     prevY = getFirst(player).y;
-    shouldpunish = 1;
+  
+    //attempt movement
+    getFirst(player).y += 1;
+  
+    // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+      // if haven't moved, reset the position
+      getFirst(player).x = prevX;
+      getFirst(player).y = prevY;
+      shouldpunish = 0;
+    } else {
+      // update previous position if player has moved
+      prevX = getFirst(player).x;
+      prevY = getFirst(player).y;
+      shouldpunish = 1;
+    }
   }
 });
 
 onInput("d", () => {
-// get previous position before moving
-  prevX = getFirst(player).x;
-  prevY = getFirst(player).y;
-
-  //attempt movement
-  getFirst(player).x += 1;
-
-  // check position after movement
-  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-    // if haven't moved, reset the position
-    getFirst(player).x = prevX;
-    getFirst(player).y = prevY;
-    shouldpunish = 0;
-  } else {
-    // update previous position if player has moved
+  if (movablestatus === 0) {
+    // get previous position before moving
     prevX = getFirst(player).x;
     prevY = getFirst(player).y;
-    shouldpunish = 1;
+  
+    //attempt movement
+    getFirst(player).x += 1;
+  
+    // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+      // if haven't moved, reset the position
+      getFirst(player).x = prevX;
+      getFirst(player).y = prevY;
+      shouldpunish = 0;
+    } else {
+      // update previous position if player has moved
+      prevX = getFirst(player).x;
+      prevY = getFirst(player).y;
+      shouldpunish = 1;
+    }
   }
 });
 
@@ -741,17 +768,14 @@ onInput("j", () => {
 
 // in case you want to start all over again, or you have finished the game
 onInput("k", () => {
-  const currentLevel = levels[level];
-  if (currentLevel !== undefined) {
-    clearText("");
-    ordercount = 0;
-    setMap(levels[0]);
-    level = 0;
-    addText(`Level: 0`, { x: 2, y: 2, color: color`2` });
-  }
+  clearText("");
+  ordercount = 0;
+  setMap(levels[0]);
+  level = 0;
+  addText(`Level: 0`, { x: 2, y: 2, color: color`2` });
 });
 
-  // function for character blinking (after dying in the game)
+// WILL FIX LATER function for character blinking (after dying in the game)
 function blinkCharacter(duration) {
   let blinkCount = duration / 500;
   let blinkInterval = setInterval(() => {
@@ -776,9 +800,6 @@ afterInput(() => {
   const brownBlockTiles = tilesWith(brownblock);
   const currentLevel = levels[level];
   const checkmarkblock = checkmark;
-  let advancedness = 3;
-
-  // 1 tile = 32 pixels(?) for memo
 
   // Check if the player is on a red block
   redBlockTiles.forEach(tile => {
@@ -787,9 +808,11 @@ afterInput(() => {
         // Reset the player to the start position
         playTune(deadmelody);
         blinkCharacter(2000);
+        movablestatus = 1;
         setTimeout(() => {
           setMap(currentLevel);
           ordercount = 0;
+          movablestatus = 0;
         }, 1000);
       } else {
         if (shouldpunish !== 0) {
@@ -808,7 +831,9 @@ afterInput(() => {
         // Reset the player to the start position
         playTune(deadmelody);
         blinkCharacter(1000);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -828,7 +853,9 @@ afterInput(() => {
       if (ordercount !== 2 && shouldpunish === 1) {
         // Reset the player to the start position
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -848,7 +875,9 @@ afterInput(() => {
       if (ordercount !== 3 && shouldpunish === 1) {
         // Reset the player to the start position
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -863,7 +892,12 @@ afterInput(() => {
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
-              setMap(levels[level]); // Set the map to the next level if no blue blocks
+              movablestatus = 1;
+              setTimeout(() => {
+                movablestatus = 0;
+                setMap(levels[level]);
+                ordercount = 0;
+              }, 1000); // Set the map to the next level if no blue blocks
               clearText(); 
               addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
@@ -880,7 +914,9 @@ afterInput(() => {
       if (ordercount !== 4 && shouldpunish === 1) {
         // Reset the player to the start position
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -894,7 +930,12 @@ afterInput(() => {
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
-              setMap(levels[level]); // Set the map to the next level if no purple blocks
+              movablestatus = 1;
+              setTimeout(() => {
+                movablestatus = 0;
+                setMap(levels[level]);
+                ordercount = 0;
+              }, 1000); // Set the map to the next level if no purple blocks
               clearText(); 
               addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
@@ -911,7 +952,9 @@ afterInput(() => {
       if (ordercount !== 5 && shouldpunish === 1) {
         // Reset the player to the start position
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -925,7 +968,12 @@ afterInput(() => {
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
-              setMap(levels[level]); // Set the map to the next level if no pink blocks
+              movablestatus = 1;
+              setTimeout(() => {
+                movablestatus = 0;
+                setMap(levels[level]);
+                ordercount = 0;
+              }, 1000); // Set the map to the next level if no pink blocks
               clearText(); 
               addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
@@ -941,7 +989,9 @@ afterInput(() => {
       if (ordercount !== 6 && shouldpunish === 1) {
         // Reset the player to the start position
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -955,7 +1005,12 @@ afterInput(() => {
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
-              setMap(levels[level]); // Set the map to the next level if no brown blocks
+              movablestatus = 1;
+              setTimeout(() => {
+                movablestatus = 0;
+                setMap(levels[level]);
+                ordercount = 0;
+              }, 1000); // Set the map to the next level if no brown blocks
               clearText(); 
               addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
@@ -971,7 +1026,9 @@ afterInput(() => {
       if (ordercount !== 7 && shouldpunish === 1) {
         // Reset the player to the start positions
         playTune(deadmelody);
+        movablestatus = 1;
         setTimeout(() => {
+          movablestatus = 0;
           setMap(currentLevel);
           ordercount = 0;
         }, 1000);
@@ -983,15 +1040,22 @@ afterInput(() => {
             if ((level+1) < levels.length) {
               playTune(winmelody);
               level++;
-              setMap(levels[level]);
+              movablestatus = 1;
+              setTimeout(() => {
+                movablestatus = 0;
+                setMap(levels[level]);
+                ordercount = 0;
+              }, 1000);
               clearText(); 
               addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
               ordercount = 0;
             } else {
               clearText();
               setMap(finishingscene[0]);
+              playTune(congratsmelody);
               addText("Congratulations!", { y: 2, color: color`3` });
-              addText("You finished!", { y: 5, color: color`3` });
+              addText("You finished!", { y: 4, color: color`3` });
+              addText("K to start over", { y: 6, color: color`0` });
             }
           
         }
@@ -1001,28 +1065,6 @@ afterInput(() => {
 
   // display level count text on screen
   // addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
-
-  // gradually add advancedness number after more colors introduced -- for future use
-  if (level === 5) {
-    if (advancedness === 3) {
-      (advancedness = advancedness + 1);
-    }
-  }
-  if (level === 11) {
-    if (advancedness === 4) {
-      (advancedness = advancedness + 1);
-    }
-  }
-  if (level === 16) {
-    if (advancedness === 5) {
-      (advancedness = advancedness + 1);
-    }
-  }
-  if (level === 21) {
-    if (advancedness === 6) {
-      (advancedness = advancedness + 1);
-    }
-  }
 
   prevX = getFirst(player).x;
   prevY = getFirst(player).y;
