@@ -5,18 +5,20 @@
 @addedOn: 2024-07-03
 */
 
-const player = "p"
-const wall = "w"
-const redblock = "r"
-const orangeblock = "o"
-const yellowblock = "y"
-const greenblock = "g"
-const blueblock = "b"
-const purpleblock = "c"
-const pinkblock = "d"
+const player = "p";
+const wall = "w";
+const redblock = "r";
+const orangeblock = "o";
+const yellowblock = "y";
+const greenblock = "g";
+const blueblock = "b";
+const purpleblock = "c";
+const pinkblock = "d";
+const brownblock = "e";
 const checkmark = "x";
-let ordercount = 0
+let ordercount = 0;
 let prevX, prevY;
+let shouldpunish = 0;
 
 setLegend(
   [ player, bitmap`
@@ -172,6 +174,23 @@ setLegend(
 0888888888888880
 0888888888888880
 0000000000000000` ],
+  [ brownblock,  bitmap`
+0000000000000000
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0CCCCCCCCCCCCCC0
+0000000000000000` ],
   [ checkmark, bitmap`
 0000000000000000
 00.............0
@@ -194,46 +213,50 @@ setLegend(
 let level = 0
 const levels = [
   map`
-.....royg
-wwwwwwwww
-wgwwwwwww
-w......ww
-wwwwwwyww
-wo.....ww
-w.wwwwwww
-wr....pww
-wwwwwwwww`, //level 0
-  map`
-.....royg
-wwwwwwwww
-wwwwwwwww
-ww....o.w
-ww.wwww.w
-w..y.r..w
-w.ww.wwww
-w.gwpwwww
-wwwwwwwww`,
-  map`
-.....royg
-wwwwwwwww
-wp......w
-wwwwgww.w
-wo......w
-wwwwwww.w
-wy......w
-wwwwwwwrw
-wwwwwwwww`,
+......royg
+wwwwwwwwww
+wwgwwwwwww
+ww......ww
+wwwwwwwyww
+wwo.....ww
+ww.wwwwwww
+wwr....pww
+wwwwwwwwww
+wwwwwwwwww`, //level 0
   map`
 ......royg
 wwwwwwwwww
-w.wwpw...w
-wowwrw.w.w
-w......w.w
-wwwwwwww.w
-ww...w...w
-wwyw.w.w.w
-w..w...wgw
+wwwwwwwwww
+www....o.w
+www.wwww.w
+ww..y.r..w
+ww.ww.wwww
+ww.gwpwwww
+wwwwwwwwww
 wwwwwwwwww`,
+  map`
+......royg
+wwwwwwwwww
+wwp......w
+wwwwwgww.w
+wwo......w
+wwwwwwww.w
+wwy......w
+wwwwwwwwrw
+wwwwwwwwww
+wwwwwwwwww`,
+  map`
+.......royg
+wwwwwwwwwww
+ww.wwpw...w
+wwowwrw.w.w
+ww......w.w
+wwwwwwwww.w
+www...w...w
+wwwyw.w.w.w
+ww..w...wgw
+wwwwwwwwwww
+wwwwwwwwwww`,
   map`
 ......royg
 wwwwwwwwww
@@ -400,73 +423,170 @@ wgwgwrwgwrw
 w.c.c.o.y.w
 wdwgwcwcwdw
 wwwwwwwwwww`,
+  map`
+....roygbcd
+wwwwwwwwwww
+wwwwwwwwwww
+w..c...g..w
+wdwwwwwwwyw
+w..d...ro.w
+wwwwwpwwwww
+w..r...c..w
+wowwwwwww.w
+w..y..g..bw
+wwwwwwwwwww`,
+  map`
+....roygbcd
+wwwwwwwwwww
+w.pw..y...w
+w.wwowwww.w
+w.r.....w.w
+wwwwwww.b.w
+w....gwowdw
+w.w.www.w.w
+w.w.w...wcw
+wyw...w.b.w
+wwwwwwwwwww`,
+  map`
+....roygbcd
+wwwwwwwwwww
+wwwwwwwwwpw
+w.........w
+wrwwowwrwww
+w....c....w
+wwwywwgwwbw
+w.........w
+wdwwcwwywww
+w....c....w
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+w....p....w
+w.wwwwwrw.w
+wyw.....wcw
+w.wowwwww.w
+w....b....w
+w.wwwwwww.w
+w.w.e..d..w
+wgw.wwwww.w
+wwwwwwwwwww`, //level 21 - +brown
+  map`
+...roygbcde
+wwwwwwwwwww
+wp........w
+wwwwwrwwwew
+w......d..w
+wowww.wwwww
+w..y...g..w
+wwwwwcwwwbw
+w..e......w
+wwwwwwwwwww
+wwwwwwwwwww`,
+  map`
+...roygbcde
+wwwwwwwwwww
+wp........w
+weg.y.b.rew
+wg.od..o..w
+w...g....bw
+w.c...o.r.w
+w.o.rb..c.w
+wb........w
+we.c.ogc.cw
+wwwwwwwwwww`,
 ]
 
 setMap(levels[level]);
 setSolids([player, wall]);
 
-prevX = getFirst(player).x;
-prevY = getFirst(player).y;
-
 // player movement controls WASD
 onInput("w", () => {
-    getFirst(player).y -= 1;
+    // get previous position before moving
+  prevX = getFirst(player).x;
+  prevY = getFirst(player).y;
 
-    // check position after movement
-    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-        // if haven't moved, reset the position
-        getFirst(player).x = prevX;
-        getFirst(player).y = prevY;
-    } else {
-        // update previous position if player has moved
-        prevX = getFirst(player).x;
-        prevY = getFirst(player).y;
-    }
+  //attempt movement
+  getFirst(player).y -= 1;
+
+  // check position after movement
+  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+    // if haven't moved, reset the position
+    getFirst(player).x = prevX;
+    getFirst(player).y = prevY;
+    shouldpunish = 0;
+  } else {
+    // update previous position if player has moved
+    prevX = getFirst(player).x;
+    prevY = getFirst(player).y;
+    shouldpunish = 1;
+  }
 });
 
 onInput("a", () => {
-    getFirst(player).x -= 1;
+    // get previous position before moving
+  prevX = getFirst(player).x;
+  prevY = getFirst(player).y;
 
-      // check position after movement
-    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-        // if haven't moved, reset the position
-        getFirst(player).x = prevX;
-        getFirst(player).y = prevY;
-    } else {
-        // update previous position if player has moved
-        prevX = getFirst(player).x;
-        prevY = getFirst(player).y;
-    }
+  //attempt movement
+  getFirst(player).x -= 1;
+
+  // check position after movement
+  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+    // if haven't moved, reset the position
+    getFirst(player).x = prevX;
+    getFirst(player).y = prevY;
+    shouldpunish = 0;
+  } else {
+    // update previous position if player has moved
+    prevX = getFirst(player).x;
+    prevY = getFirst(player).y;
+    shouldpunish = 1;
+  }
 });
 
 onInput("s", () => {
-    getFirst(player).y += 1;
+  // get previous position before moving
+  prevX = getFirst(player).x;
+  prevY = getFirst(player).y;
 
-      // check position after movement
-    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-        // if haven't moved, reset the position
-        getFirst(player).x = prevX;
-        getFirst(player).y = prevY;
-    } else {
-        // update previous position if player has moved
-        prevX = getFirst(player).x;
-        prevY = getFirst(player).y;
-    }
+  //attempt movement
+  getFirst(player).y += 1;
+
+  // check position after movement
+  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+    // if haven't moved, reset the position
+    getFirst(player).x = prevX;
+    getFirst(player).y = prevY;
+    shouldpunish = 0;
+  } else {
+    // update previous position if player has moved
+    prevX = getFirst(player).x;
+    prevY = getFirst(player).y;
+    shouldpunish = 1;
+  }
 });
 
 onInput("d", () => {
-    getFirst(player).x += 1;
+// get previous position before moving
+  prevX = getFirst(player).x;
+  prevY = getFirst(player).y;
 
-      // check position after movement
-    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
-        // if haven't moved, reset the position
-        getFirst(player).x = prevX;
-        getFirst(player).y = prevY;
-    } else {
-        // update previous position if player has moved
-        prevX = getFirst(player).x;
-        prevY = getFirst(player).y;
-    }
+  //attempt movement
+  getFirst(player).x += 1;
+
+  // check position after movement
+  if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+    // if haven't moved, reset the position
+    getFirst(player).x = prevX;
+    getFirst(player).y = prevY;
+    shouldpunish = 0;
+  } else {
+    // update previous position if player has moved
+    prevX = getFirst(player).x;
+    prevY = getFirst(player).y;
+    shouldpunish = 1;
+  }
 });
 
 // reset level if stuck
@@ -489,19 +609,22 @@ afterInput(() => {
   const blueBlockTiles = tilesWith(blueblock);
   const purpleBlockTiles = tilesWith(purpleblock);
   const pinkBlockTiles = tilesWith(pinkblock);
+  const brownBlockTiles = tilesWith(brownblock);
   const currentLevel = levels[level];
-  const advancedness = 3;
+  let advancedness = 3;
 
   // Check if the player is on a red block
   redBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 0) {
+      if (ordercount !== 0 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+        }
       }
     }
   });
@@ -509,13 +632,15 @@ afterInput(() => {
   //check if on orange block
   orangeBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 1) {
+      if (ordercount !== 1 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+        }
       }
     }
   });
@@ -523,13 +648,15 @@ afterInput(() => {
   //check if on yellow block
   yellowBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 2) {
+      if (ordercount !== 2 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+        }
       }
     }
   });
@@ -537,24 +664,26 @@ afterInput(() => {
   //check if on green block
   greenBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 3) {
+      if (ordercount !== 3 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
-        
-        // check if this level introduces blue blocks yet?
-        if (tilesWith(blueblock).length == 0) {
-          if ((level+1) < levels.length) {
-            level++;
-            setMap(levels[level]); // Set the map to the next level if no blue blocks
-            clearText(); 
-            ordercount = 0;
-            console.log("Moved to the next level.");
-          } else {
-            console.log("No more levels available."); //if no more levels left
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+          
+          // check if this level introduces blue blocks yet?
+          if (tilesWith(blueblock).length == 0) {
+            if ((level+1) < levels.length) {
+              level++;
+              setMap(levels[level]); // Set the map to the next level if no blue blocks
+              clearText(); 
+              ordercount = 0;
+              console.log("Moved to the next level.");
+            } else {
+              console.log("No more levels available."); //if no more levels left
+            }
           }
         }
       }
@@ -564,24 +693,26 @@ afterInput(() => {
   //check if on blue block
   blueBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 4) {
+      if (ordercount !== 4 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
-        
-        // check if this level introduces purple blocks yet?
-        if (tilesWith(purpleblock).length == 0) {
-          if ((level+1) < levels.length) {
-            level++;
-            setMap(levels[level]); // Set the map to the next level if no purple blocks
-            clearText(); 
-            ordercount = 0;
-            console.log("Moved to the next level.");
-          } else {
-            console.log("No more levels available."); //if no more levels left
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+          
+          // check if this level introduces purple blocks yet?
+          if (tilesWith(purpleblock).length == 0) {
+            if ((level+1) < levels.length) {
+              level++;
+              setMap(levels[level]); // Set the map to the next level if no purple blocks
+              clearText(); 
+              ordercount = 0;
+              console.log("Moved to the next level.");
+            } else {
+              console.log("No more levels available."); //if no more levels left
+            }
           }
         }
       }
@@ -591,24 +722,26 @@ afterInput(() => {
   //check if on purple block
   purpleBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 5) {
+      if (ordercount !== 5 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
-        
-        // check if this level introduces pink blocks yet?
-        if (tilesWith(pinkblock).length == 0) {
-          if ((level+1) < levels.length) {
-            level++;
-            setMap(levels[level]); // Set the map to the next level if no pink blocks
-            clearText(); 
-            ordercount = 0;
-            console.log("Moved to the next level.");
-          } else {
-            console.log("No more levels available."); //if no more levels left
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+          
+          // check if this level introduces pink blocks yet?
+          if (tilesWith(pinkblock).length == 0) {
+            if ((level+1) < levels.length) {
+              level++;
+              setMap(levels[level]); // Set the map to the next level if no pink blocks
+              clearText(); 
+              ordercount = 0;
+              console.log("Moved to the next level.");
+            } else {
+              console.log("No more levels available."); //if no more levels left
+            }
           }
         }
       }
@@ -617,30 +750,63 @@ afterInput(() => {
 
   pinkBlockTiles.forEach(tile => {
     if (tile.some(sprite => sprite.type === player)) {
-      if (ordercount !== 6) {
+      if (ordercount !== 6 && shouldpunish === 1) {
         // Reset the player to the start position
         setMap(currentLevel);
         ordercount = 0;
       } else {
-        ordercount++;
-        console.log("Order Count:", ordercount);
-        
-        if ((level+1) < levels.length) {
-          level++;
-          setMap(levels[level]); 
-          clearText(); 
-          ordercount = 0;
-          console.log("Moved to the next level.");
-        } else {
-          console.log("No more levels available."); 
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+          
+          // check if this level introduces brown blocks yet?
+          if (tilesWith(brownblock).length == 0) {
+            if ((level+1) < levels.length) {
+              level++;
+              setMap(levels[level]); // Set the map to the next level if no brown blocks
+              clearText(); 
+              ordercount = 0;
+              console.log("Moved to the next level.");
+            } else {
+              console.log("No more levels available."); //if no more levels left
+            }
+          }
         }
-        
+      }
+    }
+  });
+
+  brownBlockTiles.forEach(tile => {
+    if (tile.some(sprite => sprite.type === player)) {
+      if (ordercount !== 7 && shouldpunish === 1) {
+        // Reset the player to the start position
+        setMap(currentLevel);
+        ordercount = 0;
+      } else {
+        if (shouldpunish !== 0) {
+          ordercount++;
+          console.log("Order Count:", ordercount);
+          
+            if ((level+1) < levels.length) {
+              level++;
+              setMap(levels[level]);
+              clearText(); 
+              ordercount = 0;
+              console.log("Moved to the next level.");
+            } else {
+              console.log("No more levels available."); //if no more levels left
+            }
+          
+        }
       }
     }
   });
 
   // display order count text on screen
   addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
+
+  // these are mostly for debugging purposes, to see the variables.
+  // addText(`punish: ${shouldpunish} count: ${ordercount}`, { x: 2, y: 14, color: color`2` });
 
   // gradually add advancedness number after more colors introduced
   if (level === 5) {
