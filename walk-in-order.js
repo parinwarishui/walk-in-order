@@ -12,8 +12,8 @@ const orangeblock = "o"
 const yellowblock = "y"
 const greenblock = "g"
 const blueblock = "b"
-const purpleblock = "pp"
-const pinkblock = "pb"
+const purpleblock = "c"
+const pinkblock = "d"
 let ordercount = 0
 
 setLegend(
@@ -119,6 +119,57 @@ setLegend(
 0444444444444440
 0444444444444440
 0000000000000000` ],
+  [ blueblock,  bitmap`
+0000000000000000
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0777777777777770
+0000000000000000` ],
+  [ purpleblock,  bitmap`
+0000000000000000
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0HHHHHHHHHHHHHH0
+0000000000000000` ],
+  [ pinkblock,  bitmap`
+0000000000000000
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0888888888888880
+0000000000000000` ],
 )
 
 let level = 0
@@ -142,10 +193,161 @@ ww.wwww.w
 w..y.r..w
 w.ww.wwww
 w.gwpwwww
-wwwwwwwww`
+wwwwwwwww`,
+  map`
+.....royg
+wwwwwwwww
+wp......w
+wwwwgww.w
+wo......w
+wwwwwww.w
+wy......w
+wwwwwwwrw
+wwwwwwwww`,
+  map`
+......royg
+wwwwwwwwww
+w.wwpw...w
+wowwrw.w.w
+w......w.w
+wwwwwwww.w
+ww...w...w
+wwyw.w.w.w
+w..w...wgw
+wwwwwwwwww`,
+  map`
+......royg
+wwwwwwwwww
+wp..w....w
+w.w.w.ww.w
+wwwrw.ww.w
+w...y..wgw
+w.wwww...w
+w...ww.w.w
+www....wow
+wwwwwwwwww`,
+  map`
+.....roygb
+wwwwwwwwww
+wp..w....w
+w.w.w.ww.w
+wwwrwbww.w
+w...y..wgw
+w.wwww...w
+w...ww.w.w
+www....wow
+wwwwwwwwww`,
+  map`
+......roygb
+wwwwwwwwwww
+w.o.w...w.w
+wpw...wyw.w
+w.r.w...w.w
+ww.www.wwww
+w...w...w.w
+wbw.g.w.w.w
+w...w...w.w
+wwwwwwwwwww
+wwwwwwwwwww`,
+  map`
+......roygb
+wwwwwwwwwww
+wo.w..w..ww
+ww..wb.wy.w
+www..w..w.w
+wrww..w.g.w
+w..ww..ww.w
+ww..ww....w
+www...www.w
+wwwww....pw
+wwwwwwwwwww`,
+  map`
+......roygb
+wwwwwwwwwww
+w.w.....wyw
+w.wow.w.w.w
+w...w.w...w
+w.www.www.w
+w.www.www.w
+wbw.....wrw
+w.wgw.w.w.w
+w...w.w..pw
+wwwwwwwwwww`,
+  map`
+.p....roygb
+wwwwwwwwwww
+wwwwwwwwwww
+ww.......ww
+ww.w...w.ww
+ww.w...w.ww
+ww.......ww
+ww.wwwww.ww
+ww.......ww
+wwwwwwwwwww
+wwwwwwwwwww`,
+  map`
+......roygb
+wwwwwwwwwww
+wwwwwwwwwww
+ww.r.....ww
+ww.w.p.w.ww
+ww.w.g.wbww
+ww.o.....ww
+ww.wwwwwyww
+ww.......ww
+wwwwwwwwwww
+wwwwwwwwwww`,
+  map`
+.....roygbc
+wwwwwwwwwww
+wwwwwwwwwww
+ww.r.c...ww
+ww.w.p.w.ww
+ww.w.g.wbww
+ww.o.....ww
+ww.wwwwwyww
+ww.......ww
+wwwwwwwwwww
+wwwwwwwwwww`, 
+  map`
+.....roygbc
+wwwwwwwwwww
+w.........w
+w.w.w.w.w.w
+wow.w.w.w.w
+w.w.w.w.w.w
+w.wywbwgwcw
+wrw.w.w.w.w
+w.w.w.w.www
+w....p....w
+wwwwwwwwwww`,
+  map`
+.....roygbc
+wwwwwwwwwww
+w.........w
+w.w.w.w.w.w
+wow.w.w.w.w
+w.w.w.w.w.w
+w.wywgwbw.w
+wrw.w.w.w.w
+w.w.w.w.www
+w....pc...w
+wwwwwwwwwww`,
+  map`
+.....roygbc
+wwwwwwwwwww
+wb.......cw
+wwwwwgwwwww
+wg.......bw
+wwwwwywwwww
+wo.......gw
+wwwwwrwwwww
+wy.......ow
+wwwwwpwwwww
+wwwwwwwwwww`,
 ]
 
-setMap(levels[level])
+setMap(levels[level]);
 setSolids([player, wall]);
 
 // player movement controls WASD
@@ -175,8 +377,6 @@ onInput("j", () => {
   }
 });
 
-addText(`Order Count: ${ordercount}`, { x: 2, y: 2, color: color`2` });
-
 //check every after input
 afterInput(() => {
   const playerSprite = getFirst(player);
@@ -184,6 +384,8 @@ afterInput(() => {
   const orangeBlockTiles = tilesWith(orangeblock);
   const yellowBlockTiles = tilesWith(yellowblock);
   const greenBlockTiles = tilesWith(greenblock);
+  const blueBlockTiles = tilesWith(blueblock);
+  const purpleBlockTiles = tilesWith(purpleblock);
   const currentLevel = levels[level];
 
   // Check if the player is on a red block
@@ -238,20 +440,78 @@ afterInput(() => {
       } else {
         ordercount++;
         console.log("Order Count:", ordercount);
-        if ((level+1) < levels.length) {
-          level++;
-          setMap(levels[level]); // Set the map to the next level
-          clearText(); 
-          ordercount = 0;
-          console.log("Moved to the next level.");
-        } else {
-          console.log("No more levels available.");
+        
+        // check if this level introduces blue blocks yet?
+        if (tilesWith(blueblock).length == 0) {
+          if ((level+1) < levels.length) {
+            level++;
+            setMap(levels[level]); // Set the map to the next level if no blue blocks
+            clearText(); 
+            ordercount = 0;
+            console.log("Moved to the next level.");
+          } else {
+            console.log("No more levels available."); //if no more levels left
+          }
+        }
+      }
+    }
+  });
+
+  //check if on blue block
+  blueBlockTiles.forEach(tile => {
+    if (tile.some(sprite => sprite.type === player)) {
+      if (ordercount !== 4) {
+        // Reset the player to the start position
+        setMap(currentLevel);
+        ordercount = 0;
+      } else {
+        ordercount++;
+        console.log("Order Count:", ordercount);
+        
+        // check if this level introduces purple blocks yet?
+        if (tilesWith(purpleblock).length == 0) {
+          if ((level+1) < levels.length) {
+            level++;
+            setMap(levels[level]); // Set the map to the next level if no purple blocks
+            clearText(); 
+            ordercount = 0;
+            console.log("Moved to the next level.");
+          } else {
+            console.log("No more levels available."); //if no more levels left
+          }
+        }
+      }
+    }
+  });
+
+  //check if on purple block
+  purpleBlockTiles.forEach(tile => {
+    if (tile.some(sprite => sprite.type === player)) {
+      if (ordercount !== 5) {
+        // Reset the player to the start position
+        setMap(currentLevel);
+        ordercount = 0;
+      } else {
+        ordercount++;
+        console.log("Order Count:", ordercount);
+        
+        // check if this level introduces pink blocks yet?
+        if (tilesWith(pinkblock).length == 0) {
+          if ((level+1) < levels.length) {
+            level++;
+            setMap(levels[level]); // Set the map to the next level if no pink blocks
+            clearText(); 
+            ordercount = 0;
+            console.log("Moved to the next level.");
+          } else {
+            console.log("No more levels available."); //if no more levels left
+          }
         }
       }
     }
   });
 
   // display order count text on screen
-  addText(`Order Count: ${ordercount}`, { x: 2, y: 2, color: color`2` });
+  addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
 
 });
