@@ -14,7 +14,9 @@ const greenblock = "g"
 const blueblock = "b"
 const purpleblock = "c"
 const pinkblock = "d"
+const checkmark = "x";
 let ordercount = 0
+let prevX, prevY;
 
 setLegend(
   [ player, bitmap`
@@ -170,6 +172,23 @@ setLegend(
 0888888888888880
 0888888888888880
 0000000000000000` ],
+  [ checkmark, bitmap`
+0000000000000000
+00.............0
+0.0............0
+0..0...........0
+0...0..........0
+0....0.........0
+0.....0........0
+0......0.......0
+0.......0......0
+0........0.....0
+0.........0....0
+0..........0...0
+0...........0..0
+0............0.0
+0.............00
+0000000000000000` ],
 )
 
 let level = 0
@@ -183,7 +202,7 @@ wwwwwwyww
 wo.....ww
 w.wwwwwww
 wr....pww
-wwwwwwwww`,
+wwwwwwwww`, //level 0
   map`
 .....royg
 wwwwwwwww
@@ -236,7 +255,7 @@ w...y..wgw
 w.wwww...w
 w...ww.w.w
 www....wow
-wwwwwwwwww`,
+wwwwwwwwww`, //level 5 - +blue
   map`
 ......roygb
 wwwwwwwwwww
@@ -308,7 +327,7 @@ ww.o.....ww
 ww.wwwwwyww
 ww.......ww
 wwwwwwwwwww
-wwwwwwwwwww`, 
+wwwwwwwwwww`, //level 11 - +purple
   map`
 .....roygbc
 wwwwwwwwwww
@@ -345,26 +364,109 @@ wwwwwrwwwww
 wy.......ow
 wwwwwpwwwww
 wwwwwwwwwww`,
+  map`
+.....roygbc
+wwwwwwwwwww
+wp.r..o...w
+w.wwwwwww.w
+wrw.....wyw
+w...www.w.w
+w.wowgw.wgw
+wyw.....w.w
+w.w.wwwwwcw
+w.b...b...w
+wwwwwwwwwww`,
+  map`
+....roygbcd
+wwwwwwwwwww
+w......c..w
+wpwwrw.ww.w
+www..d..w.w
+w.w.wwwbw.w
+w.o.www...w
+w.w...g.w.w
+w.wwywwww.w
+w.....w...w
+wwwwwwwwwww`, //level 16 - +pink
+  map`
+....roygbcd
+wwwwwwwwwww
+w.b.g.o.y.w
+wbwcwywbwdw
+w.b.o.r.c.w
+wgwywrwgwcw
+w.o.rpo.b.w
+wgwgwrwgwrw
+w.c.c.o.y.w
+wdwgwcwcwdw
+wwwwwwwwwww`,
 ]
 
 setMap(levels[level]);
 setSolids([player, wall]);
 
+prevX = getFirst(player).x;
+prevY = getFirst(player).y;
+
 // player movement controls WASD
 onInput("w", () => {
     getFirst(player).y -= 1;
+
+    // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+        // if haven't moved, reset the position
+        getFirst(player).x = prevX;
+        getFirst(player).y = prevY;
+    } else {
+        // update previous position if player has moved
+        prevX = getFirst(player).x;
+        prevY = getFirst(player).y;
+    }
 });
 
 onInput("a", () => {
     getFirst(player).x -= 1;
+
+      // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+        // if haven't moved, reset the position
+        getFirst(player).x = prevX;
+        getFirst(player).y = prevY;
+    } else {
+        // update previous position if player has moved
+        prevX = getFirst(player).x;
+        prevY = getFirst(player).y;
+    }
 });
 
 onInput("s", () => {
     getFirst(player).y += 1;
+
+      // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+        // if haven't moved, reset the position
+        getFirst(player).x = prevX;
+        getFirst(player).y = prevY;
+    } else {
+        // update previous position if player has moved
+        prevX = getFirst(player).x;
+        prevY = getFirst(player).y;
+    }
 });
 
 onInput("d", () => {
     getFirst(player).x += 1;
+
+      // check position after movement
+    if (getFirst(player).x === prevX && getFirst(player).y === prevY) {
+        // if haven't moved, reset the position
+        getFirst(player).x = prevX;
+        getFirst(player).y = prevY;
+    } else {
+        // update previous position if player has moved
+        prevX = getFirst(player).x;
+        prevY = getFirst(player).y;
+    }
 });
 
 // reset level if stuck
@@ -386,7 +488,9 @@ afterInput(() => {
   const greenBlockTiles = tilesWith(greenblock);
   const blueBlockTiles = tilesWith(blueblock);
   const purpleBlockTiles = tilesWith(purpleblock);
+  const pinkBlockTiles = tilesWith(pinkblock);
   const currentLevel = levels[level];
+  const advancedness = 3;
 
   // Check if the player is on a red block
   redBlockTiles.forEach(tile => {
@@ -511,7 +615,47 @@ afterInput(() => {
     }
   });
 
+  pinkBlockTiles.forEach(tile => {
+    if (tile.some(sprite => sprite.type === player)) {
+      if (ordercount !== 6) {
+        // Reset the player to the start position
+        setMap(currentLevel);
+        ordercount = 0;
+      } else {
+        ordercount++;
+        console.log("Order Count:", ordercount);
+        
+        if ((level+1) < levels.length) {
+          level++;
+          setMap(levels[level]); 
+          clearText(); 
+          ordercount = 0;
+          console.log("Moved to the next level.");
+        } else {
+          console.log("No more levels available."); 
+        }
+        
+      }
+    }
+  });
+
   // display order count text on screen
   addText(`Level: ${level}`, { x: 2, y: 2, color: color`2` });
+
+  // gradually add advancedness number after more colors introduced
+  if (level === 5) {
+    if (advancedness === 3) {
+      (advancedness = advancedness + 1);
+    }
+  }
+  
+  if (level === 11) {
+    if (advancedness === 4) {
+      (advancedness = advancedness + 1);
+    }
+  }
+
+  prevX = getFirst(player).x;
+  prevY = getFirst(player).y;
 
 });
