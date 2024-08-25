@@ -1,5 +1,11 @@
 # Walk-In Order
 
+"Walk in order" of the colors to advance!
+
+## Where To Play?
+This game is specifically made for the Sprig console, but feel free to play this on the web here!
+[Link to Sprig editor](https://sprig.hackclub.com/share/R2YhaCrwNyQQUn9X1ReK)
+
 ## How To Play
 "Walk-in Order" is a game where you will walk through mazes with colored blocks, 
 which you have to step in order as stated on the top of your screen. Failure to do so
