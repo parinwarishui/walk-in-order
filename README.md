@@ -8,7 +8,7 @@
 
 ## Where To Play?
 This game is specifically made for the Sprig console, but feel free to play this on the web here!
-[Link to Sprig editor](https://sprig.hackclub.com/share/R2YhaCrwNyQQUn9X1ReK)
+[Link to Sprig editor](https://sprig.hackclub.com/share/qVfag9zQLciT9TqsjH5m)
 
 ## How To Play
 "Walk-in Order" is a game where you will walk through mazes with colored blocks, 
