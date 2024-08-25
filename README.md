@@ -2,6 +2,10 @@
 
 "Walk in order" of the colors to advance!
 
+![Screenshot of start game screen](sprig_screenshot.png?raw=true)
+
+![GIF of gameplay](sprig_demo.gif?raw=true)
+
 ## Where To Play?
 This game is specifically made for the Sprig console, but feel free to play this on the web here!
 [Link to Sprig editor](https://sprig.hackclub.com/share/R2YhaCrwNyQQUn9X1ReK)
